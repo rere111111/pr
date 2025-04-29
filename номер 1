@@ -1,0 +1,47 @@
+import math
+a=int(input())
+b=int(input())
+l=int(input())
+tx=int(input())
+ty=int(input())
+r=int(input())
+alpha =int(input())
+def is_intersecting_circle(px, py, tx, ty, r):
+    dx = px - tx
+    dy = py - ty
+    return (dx * dx + dy * dy) <= (r * r)
+def simulate_ray(a, b, l, tx, ty, r, alpha, N_inf=1000):
+    alpha_rad = math.radians(alpha)  
+    dx = math.cos(alpha_rad)  
+    dy = math.sin(alpha_rad)
+    x = l
+    y = 0  
+    reflections = 0
+    while reflections < N_inf:
+        t_x = float('inf')  
+        t_y = float('inf')  
+        if dx > 0:  
+            t_x = (a - x) / dx
+        elif dx < 0:  
+            t_x = -x / dx
+        if dy > 0:  
+            t_y = (b - y) / dy
+        elif dy < 0:  
+            t_y = -y / dy
+        time = min(t_x, t_y)
+        x += dx * time
+        y += dy * time
+        if is_intersecting_circle(x, y, tx, ty, r):
+            return reflections + 1  
+        if time == t_x:  
+            dx *= -1  
+        else:  
+            dy *= -1 
+        
+        reflections += 1
+    return -1  
+result = simulate_ray(a, b, l, tx, ty, r, alpha)
+if result != -1:
+    print(f"Луч пересечет окружность на {result} отражении.")
+else:
+    print("Луч никогда не пересечет окружность.")
