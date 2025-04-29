@@ -1,0 +1,26 @@
+import requests
+url = 'https://cloud.physics.itmo.ru/s/pY68e5CrdtQHF6M/download'
+response = requests.get(url)
+if response.status_code == 200:
+    with open('data.txt', 'wb') as f:
+        f.write(response.content)
+data = []
+with open('data.txt', 'r') as f:
+    for line in f:
+        data.append(float(line.strip()))
+def calculate_mean(data):
+    total = 0
+    for value in data:
+        total += value
+    mean = total / len(data)
+    return mean
+def calculate_std_dev(data, mean):
+    total_squared_diff = 0
+    for value in data:
+        total_squared_diff += (value - mean) ** 2
+    std_dev = (total_squared_diff / len(data)) ** 0.5
+    return std_dev
+mean_value = calculate_mean(data)
+std_dev_value = calculate_std_dev(data, mean_value)
+print(f"Среднее значение: {mean_value}")
+print(f"Среднеквадратичное отклонение: {std_dev_value}")
