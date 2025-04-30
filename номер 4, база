@@ -1,0 +1,33 @@
+import requests
+url = "https://cloud.physics.itmo.ru/s/pY68e5CrdtQHF6M/download"
+response = requests.get(url)
+data = response.text.splitlines()
+values = []
+for line in data:
+    cleaned_line = line.replace(',', '.').strip()
+    numbers = cleaned_line.split()
+    for num in numbers:
+        try:
+            value = float(num)
+            values.append(value)
+        except ValueError:
+            print(f"Не удалось преобразовать строку в число: {num}")
+def calculate_mean(values):
+    total = 0
+    count = 0
+    for value in values:
+        total += value
+        count += 1
+    return total / count if count > 0 else 0
+mean = calculate_mean(values)
+def calculate_std_dev(values, mean):
+    total_squared_diff = 0
+    count = 0
+    for value in values:
+        total_squared_diff += (value - mean) ** 2
+        count += 1
+    variance = total_squared_diff / count if count > 0 else 0
+    return variance ** 0.5
+std_dev = calculate_std_dev(values, mean)
+print(f"Среднее: {mean}")
+print(f"Среднеквадратичное отклонение: {std_dev}")
